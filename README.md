@@ -11,11 +11,11 @@ At this time there is no warning of switching ON/OFF a slot, just one click and 
 
 ## Screenshots
 
-Find screenshots of all available web pages in the [dovs](./docs/) directory.
+Find screenshots of all available web pages in the [docs](./docs/) directory.
 
 ## Precompiled Firmware
 
-Find the precompiled firmware in the [firmware](https://github.com/thorsten-l/ESP8266-TuringPi-WiFi-Controller/tree/master/firmware) directory.
+Find the precompiled firmware in the [firmware](./firmware/) directory.
 
 ## Compile
 
