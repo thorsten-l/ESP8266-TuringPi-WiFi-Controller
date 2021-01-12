@@ -26,6 +26,7 @@ const char SLOT_STATES_SCRIPT[] PROGMEM =
 
       "function getSlotStates() {\n"
         "var e = document.getElementById(\"slotstates\");\n"
+        "var r = document.getElementById(\"rtc\");\n"
 
         "fetch( \"/state\").then((resp) => resp.json()).then(function(data) {\n"
           "var html=\"\";\n"
@@ -42,6 +43,8 @@ const char SLOT_STATES_SCRIPT[] PROGMEM =
             "html += \"</p>\";\n"
           "}\n"
           "e.innerHTML=html;\n"
+          "html=\"<span class='sid'>\" + data.rtc + \" (UTC)</span>\";\n"
+          "r.innerHTML=html;\n"
         "})\n"
       "};\n"
 
@@ -58,6 +61,8 @@ void handleRootPage()
 
   sendLegend("Slots");
   sendPrint("<div id='slotstates'></div>");
+  sendLegend("Real Time Clock");
+  sendPrint("<div id='rtc'></div>");
   sendPrint("</fieldset></div>\n");
 
   sendPrint(SLOT_STATES_SCRIPT);

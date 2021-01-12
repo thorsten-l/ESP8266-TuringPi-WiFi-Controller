@@ -32,7 +32,7 @@ void handleJsonStatusState()
     }
   }
 
-  sprintf(buffer + idx, "]}");
+  sprintf(buffer + idx, "], \"rtc\":\"%s\"}", turingPiHandler.getDateTime() );
 
   server.send(200, "application/json", buffer);
 }
