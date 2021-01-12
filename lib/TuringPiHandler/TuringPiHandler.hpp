@@ -12,14 +12,15 @@ private:
   uint8_t status;
   time_t loopTimestamp = 0l;
 
-  uint8_t readRegister(uint8_t addr);
-  void writeRegister(uint8_t addr, uint8_t value);
+  uint8_t readRegister( uint8_t bus_addr, uint8_t register_addr);
+  void writeRegister(uint8_t bus_addr, uint8_t register_addr, uint8_t value);
 
 public:
   void readRegisters();
   void setPower( int slot, bool on );
   bool getPower( int slot );
   int getState( int slot ); // 0=unknown, 1=installed, 2=empty
+  const char* getDateTime();
 };
 
 extern TuringPiHandler turingPiHandler;
