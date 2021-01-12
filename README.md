@@ -7,7 +7,7 @@ It provides a Web, REST and telnet interface. MQTT is not implemented yet.
 
 ## !!! ATTENTION !!!
 
-At this time there is no warning of switching ON/OFF a slot, just one click and its ON or OFF!
+At this point there is no warning of turning a slot ON/OFF, just one click and the slot is ON or OFF!
 
 ## Screenshots
 
