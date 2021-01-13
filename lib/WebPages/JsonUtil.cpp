@@ -7,8 +7,6 @@
 
 extern ESP8266WebServer server;
 
-static String tpiStatusStr[] = {"-", "installed", "emtpy"};
-
 void handleJsonStatusState()
 {
   server.sendHeader("Access-Control-Allow-Origin", "*");
@@ -22,16 +20,14 @@ void handleJsonStatusState()
   {
     idx += sprintf(buffer + idx,
                    "{\"slot\":%d,\"power_on\":%s,"
-                   "\"status\":%d,\"status_str\":\"%s\","
+                   "\"status\":%d,"
                    "\"ping_total_recv\":%d,\"ping_last_seen\":%lu"
                    "}",
                    slot,
                    (turingPiHandler.getPower(slot)) ? "true" : "false",
                    turingPiHandler.getState(slot),
-                   tpiStatusStr[turingPiHandler.getState(slot)].c_str(),
                    turingPiHandler.getPingTotalRecv(slot),
-                   turingPiHandler.getPingLastSeen(slot)
-                   );
+                   turingPiHandler.getPingLastSeen(slot));
 
     if (slot < 7)
     {
