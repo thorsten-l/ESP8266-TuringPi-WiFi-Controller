@@ -23,7 +23,7 @@ void handleJsonStatusState()
     idx += sprintf(buffer + idx,
                    "{\"slot\":%d,\"power_on\":%s,"
                    "\"status\":%d,\"status_str\":\"%s\","
-                   "\"ping_total_recv\":%d,\"ping_last_seen\":\"%lu\""
+                   "\"ping_total_recv\":%d,\"ping_last_seen\":%lu"
                    "}",
                    slot,
                    (turingPiHandler.getPower(slot)) ? "true" : "false",
