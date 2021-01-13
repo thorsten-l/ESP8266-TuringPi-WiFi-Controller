@@ -7,7 +7,7 @@
 
 extern ESP8266WebServer server;
 
-static String tpiStatusStr[] = { "-", "installed", "emtpy" };
+static String tpiStatusStr[] = {"-", "installed", "emtpy"};
 
 void handleJsonStatusState()
 {
@@ -20,19 +20,27 @@ void handleJsonStatusState()
 
   for (int slot = 1; slot < 8; slot++)
   {
-    idx += sprintf(buffer + idx, "{\"slot\":%d,\"power_on\":%s,\"status\":%d,\"status_str\":\"%s\"}", slot,
+    idx += sprintf(buffer + idx,
+                   "{\"slot\":%d,\"power_on\":%s,"
+                   "\"status\":%d,\"status_str\":\"%s\","
+                   "\"ping_total_recv\":%d,\"ping_last_seen\":\"%lu\""
+                   "}",
+                   slot,
                    (turingPiHandler.getPower(slot)) ? "true" : "false",
                    turingPiHandler.getState(slot),
-                   tpiStatusStr[turingPiHandler.getState(slot)].c_str());
+                   tpiStatusStr[turingPiHandler.getState(slot)].c_str(),
+                   turingPiHandler.getPingTotalRecv(slot),
+                   turingPiHandler.getPingLastSeen(slot)
+                   );
 
-    if( slot < 7 )
+    if (slot < 7)
     {
       buffer[idx++] = ',';
       buffer[idx] = 0;
     }
   }
 
-  sprintf(buffer + idx, "], \"rtc\":\"%s\"}", turingPiHandler.getDateTime() );
+  sprintf(buffer + idx, "], \"rtc\":\"%s\"}", turingPiHandler.getDateTime());
 
   server.send(200, "application/json", buffer);
 }

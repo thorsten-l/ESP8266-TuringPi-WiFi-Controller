@@ -52,13 +52,23 @@ void TuringPiHandler::handle()
   {
     for (int i = 0; i < 7; i++)
     {
-      if ( appcfg.ping_addr[i][0] != 0 && appcfg.ping_addr[i][0] != '-' )
+      if (appcfg.ping_addr[i][0] != 0 && appcfg.ping_addr[i][0] != '-')
       {
         pingHandler[i].begin(appcfg.ping_addr[i]);
       }
     }
     lastTimestamp = millis();
   }
+}
+
+uint16_t TuringPiHandler::getPingTotalRecv(int slot)
+{
+  return pingHandler[slot - 1].response().total_recv;
+}
+
+time_t TuringPiHandler::getPingLastSeen(int slot)
+{
+  return pingHandler[slot - 1].response().last_seen;
 }
 
 uint8_t TuringPiHandler::readRegister(uint8_t bus_addr, uint8_t register_addr)
