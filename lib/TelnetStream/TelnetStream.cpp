@@ -84,6 +84,8 @@ void TelnetStreamClass::handle()
       case 'i':
       case 'I':
         TelnetStream.printf( "RTC date and time: %s (UTC)\n", turingPiHandler.getDateTime() );
+        TelnetStream.printf( "RTC now: %lu\n", turingPiHandler.getTime() );
+        TelnetStream.printf( "NTP now: %lu\n", time(nullptr) );
         turingPiHandler.readRegisters();
         for( int slot=1; slot<8; slot++ )
         {
