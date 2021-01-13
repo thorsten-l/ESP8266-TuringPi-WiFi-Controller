@@ -35,16 +35,7 @@ TuringPiHandler turingPiHandler;
 
 void TuringPiHandler::setup()
 {
-  // test setup
-  appcfg.ping_enabled = true;
-  appcfg.ping_interval = 30;
-  strcpy(appcfg.ping_addr[0], "192.168.7.11");
-  strcpy(appcfg.ping_addr[1], "192.168.7.12");
-  strcpy(appcfg.ping_addr[2], "192.168.7.13");
-  strcpy(appcfg.ping_addr[3], "192.168.7.14");
-  strcpy(appcfg.ping_addr[4], "192.168.7.15");
-  strcpy(appcfg.ping_addr[5], "192.168.7.16");
-  strcpy(appcfg.ping_addr[6], "192.168.7.17");
+ 
 }
 
 void TuringPiHandler::handle()
