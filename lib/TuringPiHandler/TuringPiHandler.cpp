@@ -187,6 +187,5 @@ const char *TuringPiHandler::getDateTime()
 
 time_t TuringPiHandler::getTime()
 {
-  getDateTime();
   return rtcnow;
 }
