@@ -40,6 +40,7 @@ void setup()
   LOG1("Found %d device(s).\n\n", count);
 
   wifiHandler.setup();
+  turingPiHandler.setup();
   maxLoopTime = 0l;
   lifeTicker = lastLoopTimestamp = millis();
   uzlib_init();
@@ -64,6 +65,7 @@ void loop()
   {
     otaHandler.handle();
     webHandler.handle();
+    turingPiHandler.handle();
     mqttHandler.handle(thisLoopTimestamp);
     if (appcfg.telnet_enabled)
     {

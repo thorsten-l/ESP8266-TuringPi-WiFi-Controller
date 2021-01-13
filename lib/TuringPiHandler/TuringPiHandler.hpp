@@ -10,13 +10,15 @@ class TuringPiHandler
 private:
   uint8_t control;
   uint8_t status;
-  time_t loopTimestamp = 0l;
+  time_t lastTimestamp = 0l;
   time_t rtcnow;
 
   uint8_t readRegister( uint8_t bus_addr, uint8_t register_addr);
   void writeRegister(uint8_t bus_addr, uint8_t register_addr, uint8_t value);
 
 public:
+  void setup();
+  void handle();
   void readRegisters();
   void setPower( int slot, bool on );
   bool getPower( int slot );

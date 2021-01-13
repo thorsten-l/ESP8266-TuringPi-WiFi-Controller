@@ -3,14 +3,15 @@
 #include <Wire.h>
 #include <ESP8266WiFi.h>
 #include <TelnetStream.h>
+#include <AsyncPing.h>
 #include "TuringPiHandler.hpp"
 
 /*
 (11950) I2C SCL=5
 (11953)     SDA=4
-(11965) Found address: 87 (0x57)
-(11966) Found address: 92 (0x5C)
-(11968) Found address: 111 (0x6F)
+(11965) Found address: 87 (0x57) Port Extender
+(11966) Found address: 92 (0x5C) Switch
+(11968) Found address: 111 (0x6F) Real Time Clock DS1307
 (11969) Found 3 device(s).
 */
 
@@ -22,12 +23,43 @@
 #define I2C_READ_INTERVAL 10000
 
 static char datetime_buffer[20];
+static const int daysOfMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 // turing pi 1 slots    -     1     2     3     4     5     6     7
-const int slot_masks[] = {0x00, 0x02, 0x04, 0x08, 0x10, 0x80, 0x40, 0x20};
-const int daysOfMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+static const int slot_masks[] = {0x00, 0x02, 0x04, 0x08, 0x10, 0x80, 0x40, 0x20};
+
+// one ping hander for each slot
+static AsyncPing pingHandler[7];
 
 TuringPiHandler turingPiHandler;
+
+void TuringPiHandler::setup()
+{
+  // test setup
+  appcfg.ping_interval = 30;
+  strcpy(appcfg.ping_addr[0], "192.168.7.11");
+  strcpy(appcfg.ping_addr[1], "192.168.7.12");
+  strcpy(appcfg.ping_addr[2], "192.168.7.13");
+  strcpy(appcfg.ping_addr[3], "192.168.7.14");
+  strcpy(appcfg.ping_addr[4], "192.168.7.15");
+  strcpy(appcfg.ping_addr[5], "192.168.7.16");
+  strcpy(appcfg.ping_addr[6], "192.168.7.17");
+}
+
+void TuringPiHandler::handle()
+{
+  if ((millis() - lastTimestamp) >= (appcfg.ping_interval * 1000))
+  {
+    for (int i = 0; i < 7; i++)
+    {
+      if ( appcfg.ping_addr[i][0] != 0 && appcfg.ping_addr[i][0] != '-' )
+      {
+        pingHandler[i].begin(appcfg.ping_addr[i]);
+      }
+    }
+    lastTimestamp = millis();
+  }
+}
 
 uint8_t TuringPiHandler::readRegister(uint8_t bus_addr, uint8_t register_addr)
 {
