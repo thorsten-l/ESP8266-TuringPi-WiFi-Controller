@@ -116,6 +116,22 @@ static const char *setupProcessor(const char *var)
   if (strcmp(var, A_ntp_server3) == 0)
     return appcfg.ntp_server3;
 
+  // Ping
+  if (strcmp(var, A_ping_enabled) == 0 && appcfg.ping_enabled == true)
+    return checked;
+  if (strcmp(var, A_ping_interval) == 0)
+  {
+    sprintf(buffer, "%lu", appcfg.ping_interval);
+    return buffer;
+  }
+  if (strcmp(var, A_ping_ip_slot1) == 0) return appcfg.ping_addr[0];
+  if (strcmp(var, A_ping_ip_slot2) == 0) return appcfg.ping_addr[1];
+  if (strcmp(var, A_ping_ip_slot3) == 0) return appcfg.ping_addr[2];
+  if (strcmp(var, A_ping_ip_slot4) == 0) return appcfg.ping_addr[3];
+  if (strcmp(var, A_ping_ip_slot5) == 0) return appcfg.ping_addr[4];
+  if (strcmp(var, A_ping_ip_slot6) == 0) return appcfg.ping_addr[5];
+  if (strcmp(var, A_ping_ip_slot7) == 0) return appcfg.ping_addr[6];
+
   return nullptr;
 }
 

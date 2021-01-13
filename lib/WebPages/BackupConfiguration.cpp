@@ -6,7 +6,7 @@ void handleBackupConfiguration()
 {
   sendAuthentication();
   server.sendHeader( "Content-Disposition", 
-    "attachment; filename=\"" APP_CONFIG_FILE_JSON "\"");
+    "attachment; filename=\"tpictl-config.json\"");
   LittleFS.begin();
   File configFile = LittleFS.open( APP_CONFIG_FILE_JSON, "r");
   server.streamFile(configFile, "application/json");

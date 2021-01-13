@@ -60,6 +60,7 @@ typedef struct appconfig
   char ntp_server2[64];
   char ntp_server3[64];
 
+  bool ping_enabled;
   unsigned long ping_interval;
   char ping_addr[7][32];
 

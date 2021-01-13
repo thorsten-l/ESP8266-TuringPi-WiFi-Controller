@@ -34,8 +34,12 @@
 
 #define DEFAULT_NTP_ENABLED true
 #define DEFAULT_NTP_TIMEZONE "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"
-#define DEFAULT_NTP_SERVER1 "ptbtime1.ptb.de"
-#define DEFAULT_NTP_SERVER2 "ptbtime2.ptb.de"
-#define DEFAULT_NTP_SERVER3 "de.pool.ntp.org"
+#define DEFAULT_NTP_SERVER1 "0.pool.ntp.org"
+#define DEFAULT_NTP_SERVER2 "1.pool.ntp.org"
+#define DEFAULT_NTP_SERVER3 "2.pool.ntp.org"
+
+#define DEFAULT_PING_ENABLED false
+#define DEFAULT_PING_INTERVAL 120
+#define DEFAULT_PING_IP "-"
 
 #endif

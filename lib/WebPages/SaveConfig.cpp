@@ -98,6 +98,18 @@ void storeConfigValue(const char *name, const char *value)
   paramChars(appcfgWR.ntp_server1, A_ntp_server1, name, value);
   paramChars(appcfgWR.ntp_server2, A_ntp_server2, name, value);
   paramChars(appcfgWR.ntp_server3, A_ntp_server3, name, value);
+
+  // Ping
+  paramBool(&appcfgWR.ping_enabled, A_ping_enabled, name, value);
+  paramUnsignedLong(&appcfgWR.ping_interval, A_ping_interval, name,
+                    value);
+  paramChars(appcfgWR.ping_addr[0], A_ping_ip_slot1, name, value);
+  paramChars(appcfgWR.ping_addr[1], A_ping_ip_slot2, name, value);
+  paramChars(appcfgWR.ping_addr[2], A_ping_ip_slot3, name, value);
+  paramChars(appcfgWR.ping_addr[3], A_ping_ip_slot4, name, value);
+  paramChars(appcfgWR.ping_addr[4], A_ping_ip_slot5, name, value);
+  paramChars(appcfgWR.ping_addr[5], A_ping_ip_slot6, name, value);
+  paramChars(appcfgWR.ping_addr[6], A_ping_ip_slot7, name, value);
 }
 
 void handleSaveConfigPage()

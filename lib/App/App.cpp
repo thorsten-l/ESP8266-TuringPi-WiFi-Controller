@@ -132,6 +132,7 @@ void App::defaultConfig()
   strncpy(appcfg.mqtt_password, DEFAULT_MQTT_PASSWORD, 63);
   strncpy(appcfg.mqtt_intopic, DEFAULT_MQTT_INTOPIC, 63);
   strncpy(appcfg.mqtt_outtopic, DEFAULT_MQTT_OUTTOPIC, 63);
+  appcfg.mqtt_sending_interval = DEFAULT_MQTT_SENDING_INTERVAL;
 
   appcfg.telnet_enabled = DEFAULT_TELNET_ENABLED;
 
@@ -140,6 +141,14 @@ void App::defaultConfig()
   strncpy(appcfg.ntp_server1, DEFAULT_NTP_SERVER1, 63);
   strncpy(appcfg.ntp_server2, DEFAULT_NTP_SERVER2, 63);
   strncpy(appcfg.ntp_server3, DEFAULT_NTP_SERVER3, 63);
+  
+  appcfg.ping_enabled = DEFAULT_PING_ENABLED;
+  appcfg.ping_interval = DEFAULT_PING_INTERVAL;
+  for( int i=0; i<7; i++ ) 
+  {
+    strncpy(appcfg.ping_addr[i], DEFAULT_PING_IP, 31);
+    appcfg.ping_addr[i][31] = 0;
+  }
 
   memcpy(&appcfgWR, &appcfg, sizeof(appcfg));
   memcpy(&appcfgRD, &appcfg, sizeof(appcfg));
@@ -341,6 +350,16 @@ void App::writeConfig()
     j.writeEntry(A_ntp_server2, appcfgWR.ntp_server2);
     j.writeEntry(A_ntp_server3, appcfgWR.ntp_server3);
 
+    j.writeEntry(A_ping_enabled, appcfgWR.ping_enabled);
+    j.writeEntry(A_ping_interval, appcfgWR.ping_interval);
+    j.writeEntry(A_ping_ip_slot1, appcfgWR.ping_addr[0]);
+    j.writeEntry(A_ping_ip_slot2, appcfgWR.ping_addr[1]);
+    j.writeEntry(A_ping_ip_slot3, appcfgWR.ping_addr[2]);
+    j.writeEntry(A_ping_ip_slot4, appcfgWR.ping_addr[3]);
+    j.writeEntry(A_ping_ip_slot5, appcfgWR.ping_addr[4]);
+    j.writeEntry(A_ping_ip_slot6, appcfgWR.ping_addr[5]);
+    j.writeEntry(A_ping_ip_slot7, appcfgWR.ping_addr[6]);
+
     j.writeFooter();
     configJson.close();
 
@@ -407,6 +426,14 @@ void App::printConfig(AppConfig ac)
   Serial.printf("    NTP Server 2: %s\n", ac.ntp_server2);
   Serial.printf("    NTP Server 3: %s\n", ac.ntp_server3);
   
+  Serial.println("\n  Ping:");
+  Serial.printf("    Enabled: %s\n", (ac.ping_enabled ? "true" : "false"));
+  Serial.printf("    Interval: %ld\n", ac.ping_interval);
+  for( int i=0; i<7; i++ )
+  {
+    Serial.printf("    NTP Server %d: %s\n", (i+1), ac.ping_addr[i]);
+  }
+
   Serial.println("---------------------------------------------------------");
   Serial.println();
 }
@@ -492,6 +519,15 @@ bool App::loadJsonConfig(const char *filename)
       readError |= j.readEntryChars(attributeName, A_ntp_server2, appcfgRD.ntp_server2);
       readError |= j.readEntryChars(attributeName, A_ntp_server3, appcfgRD.ntp_server3);
 
+      readError |= j.readEntryBoolean(attributeName, A_ping_enabled, &appcfgRD.ping_enabled);
+      readError |= j.readEntryULong(attributeName, A_ping_interval, &appcfgRD.ping_interval);
+      readError |= j.readEntryChars(attributeName, A_ping_ip_slot1, appcfgRD.ping_addr[0]);
+      readError |= j.readEntryChars(attributeName, A_ping_ip_slot2, appcfgRD.ping_addr[1]);
+      readError |= j.readEntryChars(attributeName, A_ping_ip_slot3, appcfgRD.ping_addr[2]);
+      readError |= j.readEntryChars(attributeName, A_ping_ip_slot4, appcfgRD.ping_addr[3]);
+      readError |= j.readEntryChars(attributeName, A_ping_ip_slot5, appcfgRD.ping_addr[4]);
+      readError |= j.readEntryChars(attributeName, A_ping_ip_slot6, appcfgRD.ping_addr[5]);
+      readError |= j.readEntryChars(attributeName, A_ping_ip_slot7, appcfgRD.ping_addr[6]);
     }
   }
 

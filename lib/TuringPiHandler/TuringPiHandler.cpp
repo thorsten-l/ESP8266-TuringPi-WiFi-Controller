@@ -36,6 +36,7 @@ TuringPiHandler turingPiHandler;
 void TuringPiHandler::setup()
 {
   // test setup
+  appcfg.ping_enabled = true;
   appcfg.ping_interval = 30;
   strcpy(appcfg.ping_addr[0], "192.168.7.11");
   strcpy(appcfg.ping_addr[1], "192.168.7.12");
@@ -48,7 +49,8 @@ void TuringPiHandler::setup()
 
 void TuringPiHandler::handle()
 {
-  if ((millis() - lastTimestamp) >= (appcfg.ping_interval * 1000))
+  if (appcfg.ping_enabled &&
+      (millis() - lastTimestamp) >= (appcfg.ping_interval * 1000))
   {
     for (int i = 0; i < 7; i++)
     {

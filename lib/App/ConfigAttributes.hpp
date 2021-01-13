@@ -36,5 +36,14 @@
 #define A_ntp_server2 "ntp_server2"
 #define A_ntp_server3 "ntp_server3"
 
+#define A_ping_enabled "ping_enabled"
+#define A_ping_interval "ping_interval"
+#define A_ping_ip_slot1 "ping_ip_slot1"
+#define A_ping_ip_slot2 "ping_ip_slot2"
+#define A_ping_ip_slot3 "ping_ip_slot3"
+#define A_ping_ip_slot4 "ping_ip_slot4"
+#define A_ping_ip_slot5 "ping_ip_slot5"
+#define A_ping_ip_slot6 "ping_ip_slot6"
+#define A_ping_ip_slot7 "ping_ip_slot7"
 
 #endif
