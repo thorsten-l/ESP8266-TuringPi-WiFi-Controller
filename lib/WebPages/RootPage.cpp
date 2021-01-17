@@ -48,7 +48,7 @@ const char SLOT_STATES_SCRIPT[] PROGMEM =
             "var iconclass = \"unknown\";\n"
             "if ( state.status === 1 ) iconclass = \"installed\";\n"
             "if ( state.status === 2 ) iconclass = \"empty\";\n"
-            "if ( state.ping_total_recv > 0 ) iconclass = \"running\";\n"
+            "if ( state.ping_last_recv > 0 ) iconclass = \"running\";\n"
             "html += \"<span class='svgicon \" + iconclass + \"'></span>\";\n"
             "var ls = new Date(state.ping_last_seen*1000).toLocaleString();\n"
             "if ( state.ping_last_seen === 0 ) { ls = \"\" }\n"
