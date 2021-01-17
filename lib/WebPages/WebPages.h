@@ -38,4 +38,6 @@ extern void sendPrintf(const char *format, ...);
 extern void sendPrint(const char *message);
 extern void sendLegend(const char *name);
 
+extern void buildJsonMessage();
+
 #endif

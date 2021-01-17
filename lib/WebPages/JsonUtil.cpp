@@ -7,11 +7,8 @@
 
 extern ESP8266WebServer server;
 
-void handleJsonStatusState()
+void buildJsonMessage()
 {
-  server.sendHeader("Access-Control-Allow-Origin", "*");
-  sendHeaderNoCache();
-
   turingPiHandler.readRegisters();
 
   int idx = sprintf(buffer, "{\"state\":[");
@@ -21,12 +18,12 @@ void handleJsonStatusState()
     idx += sprintf(buffer + idx,
                    "{\"slot\":%d,\"power_on\":%s,"
                    "\"status\":%d,"
-                   "\"ping_total_recv\":%d,\"ping_last_seen\":%lu"
+                   "\"ping_last_recv\":%d,\"ping_last_seen\":%lu"
                    "}",
                    slot,
                    (turingPiHandler.getPower(slot)) ? "true" : "false",
                    turingPiHandler.getState(slot),
-                   turingPiHandler.getPingTotalRecv(slot),
+                   turingPiHandler.getPingLastRecv(slot),
                    turingPiHandler.getPingLastSeen(slot));
 
     if (slot < 7)
@@ -36,7 +33,14 @@ void handleJsonStatusState()
     }
   }
 
-  sprintf(buffer + idx, "], \"rtc\":\"%s\"}", turingPiHandler.getDateTime());
+  sprintf(buffer + idx, "], \"rtc\":\"%s\", \"rtc_now\":%ld}",
+          turingPiHandler.getDateTime(), turingPiHandler.getTime());
+}
 
+void handleJsonStatusState()
+{
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  sendHeaderNoCache();
+  buildJsonMessage();
   server.send(200, "application/json", buffer);
 }
