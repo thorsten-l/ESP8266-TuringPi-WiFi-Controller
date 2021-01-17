@@ -20,6 +20,7 @@
 extern void appShowHeader(Stream &out);
 extern const char *appUptime();
 extern const char *appDateTime();
+extern const char *appDateTime(time_t now);
 extern void logMessage(const char *message);
 extern void logMessage(String format, ...);
 

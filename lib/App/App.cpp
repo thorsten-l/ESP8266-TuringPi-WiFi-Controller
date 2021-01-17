@@ -77,13 +77,17 @@ const char *appUptime()
   return appUptimeBuffer;
 }
 
-const char *appDateTime()
+const char *appDateTime(time_t now)
 {
-  time_t now = time(nullptr);
   localtime_r(&now, &appTimeinfo);
   sprintf(appDateTimeBuffer, "%4d-%02d-%02d %02d:%02d:%02d", appTimeinfo.tm_year + 1900, appTimeinfo.tm_mon + 1,
           appTimeinfo.tm_mday, appTimeinfo.tm_hour, appTimeinfo.tm_min, appTimeinfo.tm_sec);
   return appDateTimeBuffer;
+}
+
+const char *appDateTime()
+{
+  return appDateTime(time(nullptr));
 }
 
 void appShowHeader(Stream &out)
