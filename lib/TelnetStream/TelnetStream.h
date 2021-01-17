@@ -38,6 +38,9 @@ private:
   void printHelp();
   void printBanner();
 
+  char commandLine[32];
+  int commandIndex;
+
 public:
   TelnetStreamClass(uint16_t port);
 

@@ -3,7 +3,8 @@
 #include <TuringPiHandler.hpp>
 #include "TelnetStream.h"
 
-static String tpiStatusStr[] = { "-", "installed", "emtpy" };
+static String tpiStatusStr[] = {"-", "installed", "emtpy"};
+static bool escape;
 
 void testFn()
 {
@@ -15,12 +16,13 @@ extern const char *getJsonStatus(WiFiClient *client);
 void TelnetStreamClass::printHelp()
 {
   TelnetStream.println("\n\nHELP page\n"
-                       "h : this help\n"
-                       "i : Turing Pi slot information\n"
-                       "b : print banner\n"
-                       "u : uptime\n"
-                       "j : json status\n"
-                       "q,e : quit / exit \n");
+                       "help : this help\n"
+                       "info : Turing Pi slot information\n"
+                       "set_slot [1..7] power_on [0|1] : turn a slot power on/off \n"
+                       "banner : print banner\n"
+                       "uptime : uptime\n"
+                       "json : json status\n"
+                       "quit,exit : quit / exit this session\n");
 }
 
 void TelnetStreamClass::printBanner()
@@ -37,6 +39,9 @@ TelnetStreamClass::TelnetStreamClass(uint16_t port) : server(port)
 
 void TelnetStreamClass::begin()
 {
+  escape = false;
+  commandIndex = 0;
+  commandLine[0] = 0;
   isConnected = false;
   server.begin();
   client = server.available();
@@ -59,60 +64,96 @@ void TelnetStreamClass::handle()
     {
       int c = TelnetStream.read();
 
-      switch (c)
+      if (escape == false && (c == 10 || c == 13 || (c > 31 && c < 127)))
       {
-      case 'h':
-      case 'H':
-        printHelp();
-        break;
-
-      case 't':
-      case 'T':
-        testFn();
-        break;
-
-      case 'b':
-      case 'B':
-        printBanner();
-        break;
-
-      case 'j':
-      case 'J':
-        TelnetStream.println(getJsonStatus(&client));
-        break;
-
-      case 'i':
-      case 'I':
-        TelnetStream.printf( "RTC date and time: %s (UTC)\n", turingPiHandler.getDateTime() );
-        TelnetStream.printf( "RTC now: %lu\n", turingPiHandler.getTime() );
-        TelnetStream.printf( "NTP now: %lu\n", time(nullptr) );
-        turingPiHandler.readRegisters();
-        for( int slot=1; slot<8; slot++ )
+        if ((c == 10 || c == 13) && commandIndex > 0)
         {
-          TelnetStream.printf( "slot #%d : %s : %s\n", slot, 
-          (turingPiHandler.getPower(slot)) ? "ON " : "OFF",
-          tpiStatusStr[turingPiHandler.getState(slot)].c_str());
+          // logMessage("command = <%s>", commandLine);
+
+          int cmd = commandLine[0] & 0x00df;
+
+          switch (cmd)
+          {
+          case 'B':
+            printBanner();
+            break;
+
+          case 'U':
+            TelnetStream.printf("\nTime      : %s\n", appDateTime());
+            TelnetStream.printf("Uptime    : %s\n", appUptime());
+            TelnetStream.printf("Free Heap : %u\n", ESP.getFreeHeap());
+            TelnetStream.println();
+            break;
+
+          case 'J':
+            TelnetStream.println(getJsonStatus(&client));
+            break;
+
+          case 'H':
+            printHelp();
+            break;
+
+          case 'I':
+          {
+            TelnetStream.printf("RTC: (%lu) %s (UTC)\n",
+                                turingPiHandler.getTime(), turingPiHandler.getDateTime());
+            TelnetStream.printf("NTP: (%lu) %s\n\n",
+                                time(nullptr), appDateTime());
+            turingPiHandler.readRegisters();
+            for (int slot = 1; slot < 8; slot++)
+            {
+              TelnetStream.printf("slot #%d : %s : %s (%d : %s)\n", slot,
+                                  (turingPiHandler.getPower(slot)) ? "ON " : "OFF",
+                                  tpiStatusStr[turingPiHandler.getState(slot)].c_str(),
+                                  turingPiHandler.getPingLastRecv(slot),
+                                  appDateTime(turingPiHandler.getPingLastSeen(slot)));
+            }
+          }
+          break;
+
+          case 'S':
+          {
+            char command[32];
+            char subcommand[32];
+            int slot = -1;
+            int power_on = -1;
+
+            sscanf(commandLine, "%s %d %s %d", command, &slot, subcommand, &power_on);
+            if (strcmp("set_slot", command) == 0 
+            && strcmp("power_on", subcommand) == 0 
+            && slot >= 1 && slot <= 7 && power_on >= 0 && power_on <= 1)
+            {
+              logMessage("Turning slot %d to power %s.", slot, (power_on == 1) ? "on" : "off");
+              turingPiHandler.setPower(slot, power_on == 1);
+            }
+            else
+            {
+              logMessage("unknown command");
+            }
+          }
+          break;
+
+          case 'Q':
+          case 'E':
+            isConnected = false;
+            stop();
+            break;
+          }
+
+          commandLine[0] = 0;
+          commandIndex = 0;
         }
-        break;
-
-      case 'u':
-      case 'U':
-      {
-        TelnetStream.printf("\nTime      : %s\n", appDateTime());
-        TelnetStream.printf("Uptime    : %s\n", appUptime());
-        TelnetStream.printf("Free Heap : %u\n", ESP.getFreeHeap());
-        TelnetStream.println();
+        else
+        {
+          if (commandIndex < 31 && c > 31)
+          {
+            commandLine[commandIndex++] = c;
+            commandLine[commandIndex] = 0;
+          }
+        }
       }
-      break;
 
-      case 'q':
-      case 'Q':
-      case 'e':
-      case 'E':
-        isConnected = false;
-        stop();
-        break;
-      }
+      escape = c > 127;
     }
   }
 }
