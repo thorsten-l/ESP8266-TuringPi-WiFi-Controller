@@ -40,7 +40,7 @@ void TuringPiHandler::setup()
 
 void TuringPiHandler::handle()
 {
-  if (appcfg.ping_enabled &&
+  if ( appcfg.ping_enabled && appcfg.ping_interval > 0 &&
       (millis() - lastTimestamp) >= (appcfg.ping_interval * 1000))
   {
     for (int i = 0; i < 7; i++)
@@ -54,9 +54,9 @@ void TuringPiHandler::handle()
   }
 }
 
-uint16_t TuringPiHandler::getPingTotalRecv(int slot)
+uint16_t TuringPiHandler::getPingLastRecv(int slot)
 {
-  return pingHandler[slot - 1].response().total_recv;
+  return pingHandler[slot - 1].response().last_recv;
 }
 
 time_t TuringPiHandler::getPingLastSeen(int slot)

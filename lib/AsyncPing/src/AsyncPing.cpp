@@ -17,6 +17,7 @@ AsyncPing::AsyncPing() {
   _on_sent = NULL;
   count_down = 0;
   _response.last_seen = 0;
+  _response.last_recv = 0;
   _response.total_recv = 0;
   memset(&_timer, 0, sizeof(_timer));
   memset(&_timer_recv, 0, sizeof(_timer_recv));
@@ -95,6 +96,7 @@ void AsyncPing::timer() {
 }
 
 void AsyncPing::done() {
+  _response.last_recv = _response.total_recv;
   if (ping_pcb) {
     raw_remove(ping_pcb);
     ping_pcb = NULL;

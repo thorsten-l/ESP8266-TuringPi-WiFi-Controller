@@ -25,7 +25,7 @@ public:
   int getState( int slot ); // 0=unknown, 1=installed, 2=empty
   const char* getDateTime();
   time_t getTime();
-  uint16_t getPingTotalRecv( int slot );
+  uint16_t getPingLastRecv( int slot ); 
   time_t getPingLastSeen( int slot ); 
 };
 

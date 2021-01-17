@@ -22,6 +22,7 @@ class AsyncPingResponse{
     u32_t timeout;
     IPAddress addr;
     time_t last_seen;
+    u16_t last_recv;
 };
 
 #ifdef ARDUINO_ESP8266_RELEASE_2_3_0
