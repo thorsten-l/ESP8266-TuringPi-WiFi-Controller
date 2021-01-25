@@ -203,6 +203,10 @@ void App::setup()
 {
   Serial.begin(74880);
 
+#ifdef WIFI_LED
+  pinMode( WIFI_LED, OUTPUT );
+#endif
+
   for (int i = 0; i < 5; i++)
   {
     wifiLedOn();
